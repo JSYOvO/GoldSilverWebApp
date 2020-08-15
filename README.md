@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 위 프로젝트는 Gold & Silver 현물 투자의 수익률 확인용 Web App입니다.
 
