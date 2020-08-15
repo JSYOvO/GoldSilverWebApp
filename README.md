@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 위 프로젝트는 Gold & Silver 현물 투자의 수익률 확인용 Web App입니다.
 
@@ -71,3 +72,6 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+=======
+# GoldSilverWebApp
+>>>>>>> 89429f47079682b9ac9276ddf544e612104dba3f
