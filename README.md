@@ -1,1 +1,1 @@
-# Gold-Silver-Web-App
+# GoldSilverWebApp
