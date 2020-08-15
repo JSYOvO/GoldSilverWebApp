@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import AppBar from './Components/AppBar';
+import AppBar from './Components/AppTab';
 import AppTrend from './Components/AppTrend';
 import AppUserData from './Components/AppUserData';
 
