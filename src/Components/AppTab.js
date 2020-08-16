@@ -15,6 +15,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
+
+import {post} from 'axios';
 
 const tag = "[AppBar]";
 
@@ -23,12 +26,12 @@ const styles = {
     bar : {background: "#f5f52f", color:"#000000"},
     menuTitle: {marginRight: 'auto',},
     dialogPaper: {
-        minHeight: '40vh',
+        minHeight: '42.5vh',
     },
     DialogTextFiled: {background: "#F7F7F7", height: 32},
     DialogButton: {background: "#f5f52f", border: 0, borderRadius: 20, height: 32, padding: '0 20px', margin: "dense"}
 };
-
+  
 class AppTab extends React.Component {
     constructor(props) {
         super(props);
@@ -40,7 +43,9 @@ class AppTab extends React.Component {
             joinPassword : "",
             joinPasswordRe : " ",
             loginEmail : "",
-            loginPassword : ""
+            loginPassword : "",
+            joinInfoCorrect : true,
+            loginInfoCorrect : true,
         }
     }
     
@@ -51,14 +56,19 @@ class AppTab extends React.Component {
     handleLoginToggle = () => {
         console.log(tag,"handleLoginToggle()")
         this.setState({
-            loginToggle : !this.state.loginToggle
+            loginToggle : !this.state.loginToggle,
+            loginEmail : "",
+            loginPassword : "",
         })
     }
 
     handleJoinToggle = () => {
         console.log(tag,"handleJoinToggle()")
         this.setState({
-            joinToggle : !this.state.joinToggle
+            joinToggle : !this.state.joinToggle,
+            joinEmail : "",
+            joinPassword : "",
+            joinPasswordRe : " "
         })
     }
 
@@ -86,10 +96,54 @@ class AppTab extends React.Component {
             if(this.state.joinPassword == this.state.joinPasswordRe) return false;
             else return true; 
         }
-            
+        else if(type == 'loginPassword'){
+            if(this.state.loginPassword.length > 0) return false;
+            else return true;
+        }
+    }
 
+    handleJoin = () => {
+        console.log(tag, "handleJoin");
+        const url = '/api/join';
+        const formData = new FormData();
+        if(!this.validate(this.state.joinEmail,'joinEmail') 
+        && !this.validate(this.state.joinPassword,'joinPassword') 
+        && !this.validate(this.state.joinPasswordRe,'joinPasswordRe')){
+            formData.append('email',this.state.joinEmail);
+            formData.append('password',this.state.joinPassword);
+            const config = { headers : {'content-type' : 'multipart/form-data'}}
+            return post(url,formData,config);
+        }
+        else{
+            this.setState({
+                joinInfoCorrect : !this.state.joinInfoCorrect
+            })
+        }
+    }
 
-        
+    handleLogin = () => {
+        console.log(tag, "handleLogin");
+        const url = '/api/login';
+        const formData = new FormData();
+        if(this.state.loginEmail.length > 0 && this.state.loginPassword.length > 0){
+            formData.append('email',this.state.loginEmail);
+            formData.append('password',this.state.loginPassword);
+            const config = { headers : {'content-type' : 'multipart/form-data'}}
+            return post(url,formData,config);
+        }
+        else{
+            this.setState({
+                loginInfoCorrect : !this.state.loginInfoCorrect
+            })
+        }
+    }
+
+    onCloseJoinFail = () => {
+        this.setState({joinInfoCorrect : !this.state.joinInfoCorrect})
+    }
+
+    onCloseLoginFail = () => {
+        this.setState({loginInfoCorrect : !this.state.loginInfoCorrect})
     }
 
     render() {
@@ -146,7 +200,7 @@ class AppTab extends React.Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button class={classes.DialogButton} color="primary">회원가입하기</Button>
+                        <Button class={classes.DialogButton} color="primary" onClick={this.handleJoin}>회원가입하기</Button>
                         <Button class={classes.DialogButton} color="primary" onClick={this.handleJoinToggle}>취소하기</Button>
                     </DialogActions>
                 </Dialog>
@@ -168,14 +222,29 @@ class AppTab extends React.Component {
                             id="password"
                             type="password"
                             onChange={e => this.handleChange(e,'loginPassword')}
-                            error = {this.validate(this.state.loginPassword,'loginPasswords')}
+                            error = {this.validate(this.state.loginPassword,'loginPassword')}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button class={classes.DialogButton} color="primary">로그인하기</Button>
+                        <Button class={classes.DialogButton} color="primary" onClick={this.handleLogin}>로그인하기</Button>
                         <Button class={classes.DialogButton} color="primary" onClick={this.handleLoginToggle}>취소하기</Button>
                     </DialogActions>
+
                 </Dialog>
+                <Snackbar 
+                    open={!this.state.joinInfoCorrect} 
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'center',}}
+                    autoHideDuration={1000}
+                    onClose = {this.onCloseJoinFail}
+                    message="회원가입 정보를 확인하세요"
+                />
+                <Snackbar 
+                    open={!this.state.loginInfoCorrect} 
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'center',}}
+                    autoHideDuration={1000}
+                    onClose = {this.onCloseLoginFail}
+                    message="로그인 정보를 확인하세요"
+                />
             </div>
         )
     }
