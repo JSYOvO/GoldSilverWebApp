@@ -22,6 +22,9 @@ const styles = {
     root : {flexGrow: 1,},
     bar : {background: "#f5f52f", color:"#000000"},
     menuTitle: {marginRight: 'auto',},
+    dialogPaper: {
+        minHeight: '40vh',
+    },
     DialogTextFiled: {background: "#F7F7F7", height: 32},
     DialogButton: {background: "#f5f52f", border: 0, borderRadius: 20, height: 32, padding: '0 20px', margin: "dense"}
 };
@@ -32,7 +35,12 @@ class AppTab extends React.Component {
         this.state = {
             loginToggle : false,
             joinToggle : false,
-            isLogined : false
+            isLogined : false,
+            joinEmail : "",
+            joinPassword : "",
+            joinPasswordRe : " ",
+            loginEmail : "",
+            loginPassword : ""
         }
     }
     
@@ -52,6 +60,36 @@ class AppTab extends React.Component {
         this.setState({
             joinToggle : !this.state.joinToggle
         })
+    }
+
+    handleChange = (e, type) => {
+        console.log(tag, "handleChange()", e.target.value, type);
+        const value = e.target.value;
+        const nextState = {};
+        nextState[type] = value;
+        this.setState(nextState);
+    }
+
+    validate = (data, type) => {
+        console.log(tag,"validate()", data, type);
+
+        if(type == 'joinEmail' || type == 'loginEmail'){
+            if(data.indexOf('@') < 0) return true;
+            else return false;
+        }
+        else if(type == 'joinPassword'){
+            var reg_pwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+            if(!reg_pwd.test(data)) return true;
+            else return false;
+        }
+        else if(type =='joinPasswordRe'){
+            if(this.state.joinPassword == this.state.joinPasswordRe) return false;
+            else return true; 
+        }
+            
+
+
+        
     }
 
     render() {
@@ -77,7 +115,7 @@ class AppTab extends React.Component {
                         </div>
                     </Toolbar>
                 </AppBar>
-                <Dialog open={this.state.joinToggle} onClose={this.handleJoinToggle}>
+                <Dialog classes={{ paper: classes.dialogPaper }} open={this.state.joinToggle} onClose={this.handleJoinToggle}>
                     <DialogTitle>처음이신가요?</DialogTitle>
                     <DialogContent>
                         이메일
@@ -86,18 +124,25 @@ class AppTab extends React.Component {
                             margin="dense"
                             id="Email Address"
                             type="email"
+                            onChange={e => this.handleChange(e,'joinEmail')}
+                            error = {this.validate(this.state.joinEmail, 'joinEmail')}
                         />
                         비밀번호
                         <TextField class={classes.DialogTextFiled}
                             margin="dense"
                             id="password"
                             type="password"
+                            onChange={e => this.handleChange(e,'joinPassword')}
+                            error = {this.validate(this.state.joinPassword, 'joinPassword')}
                         />
                         비밀번호 확인
                         <TextField class={classes.DialogTextFiled}
                             margin="dense"
-                            id="password"
+                            id="passwordRe"
                             type="password"
+                            onChange={e =>this.handleChange(e,'joinPasswordRe')}
+                            error = {this.validate(this.state.joinPasswordRe, 'joinPasswordRe')}
+                            helperText = "영문, 숫자 혼합하여 6~20자리 이내"
                         />
                     </DialogContent>
                     <DialogActions>
@@ -114,13 +159,16 @@ class AppTab extends React.Component {
                             margin="dense"
                             id="Email Address"
                             type="email"
+                            onChange={e => this.handleChange(e,'loginEmail')}
+                            error = {this.validate(this.state.loginEmail, 'loginEmail')}
                         />
                         비밀번호
                         <TextField class={classes.DialogTextFiled}
                             margin="dense"
                             id="password"
                             type="password"
-
+                            onChange={e => this.handleChange(e,'loginPassword')}
+                            error = {this.validate(this.state.loginPassword,'loginPasswords')}
                         />
                     </DialogContent>
                     <DialogActions>
