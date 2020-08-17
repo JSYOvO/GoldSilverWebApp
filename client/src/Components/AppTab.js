@@ -1,32 +1,28 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import { fade, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
 
 import {post} from 'axios';
 
-const tag = "[AppBar]";
+const tag = "[AppTab]";
 
 const styles = {
     root : {flexGrow: 1,},
     bar : {background: "#f5f52f", color:"#000000"},
     menuTitle: {marginRight: 'auto',},
     dialogPaper: {
-        minHeight: '42.5vh',
+        minHeight: '45.5vh',
     },
     DialogTextFiled: {background: "#F7F7F7", height: 32},
     DialogButton: {background: "#f5f52f", border: 0, borderRadius: 20, height: 32, padding: '0 20px', margin: "dense"}
@@ -83,20 +79,20 @@ class AppTab extends React.Component {
     validate = (data, type) => {
         console.log(tag,"validate()", data, type);
 
-        if(type == 'joinEmail' || type == 'loginEmail'){
+        if(type === 'joinEmail' || type === 'loginEmail'){
             if(data.indexOf('@') < 0) return true;
             else return false;
         }
-        else if(type == 'joinPassword'){
+        else if(type === 'joinPassword'){
             var reg_pwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
             if(!reg_pwd.test(data)) return true;
             else return false;
         }
-        else if(type =='joinPasswordRe'){
-            if(this.state.joinPassword == this.state.joinPasswordRe) return false;
+        else if(type ==='joinPasswordRe'){
+            if(this.state.joinPassword === this.state.joinPasswordRe) return false;
             else return true; 
         }
-        else if(type == 'loginPassword'){
+        else if(type === 'loginPassword'){
             if(this.state.loginPassword.length > 0) return false;
             else return true;
         }
@@ -123,12 +119,17 @@ class AppTab extends React.Component {
 
     handleLogin = () => {
         console.log(tag, "handleLogin");
-        const url = '/api/login';
+
+        const url = '/api/join';
         const formData = new FormData();
+
         if(this.state.loginEmail.length > 0 && this.state.loginPassword.length > 0){
             formData.append('email',this.state.loginEmail);
             formData.append('password',this.state.loginPassword);
-            const config = { headers : {'content-type' : 'multipart/form-data'}}
+            const config = {
+                // headers : {'content-type' : 'multipart/form-data'}
+                headers : {'content-type' : 'application/x-www-form-urlencoded'}
+            }
             return post(url,formData,config);
         }
         else{
@@ -156,7 +157,7 @@ class AppTab extends React.Component {
                         <IconButton edge="start" color="inherit" aria-label="menu">
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" className={classes.menuTitle} noWarp>
+                        <Typography variant="h6" className={classes.menuTitle}>
                             Gold&Silver Investing
                         </Typography>
                         <div>

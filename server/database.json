@@ -1,0 +1,7 @@
+{
+    "host" : "management-tutorial.ctzifxstsrsu.us-east-2.rds.amazonaws.com",
+    "user" : "user",
+    "password" : "skan756qkek",
+    "port" : "3306",
+    "database" : "myWeb"
+}
