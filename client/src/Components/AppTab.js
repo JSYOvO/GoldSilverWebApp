@@ -120,7 +120,7 @@ class AppTab extends React.Component {
     handleLogin = () => {
         console.log(tag, "handleLogin");
 
-        const url = '/api/join';
+        const url = '/api/login';
         const formData = new FormData();
 
         if(this.state.loginEmail.length > 0 && this.state.loginPassword.length > 0){
