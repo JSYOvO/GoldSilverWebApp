@@ -34,28 +34,40 @@ var UserData = mongoose.model('users',userSchema);
 const tag = "[server]";
 
 app.post('/api/join', upload.single(), (req,res) => {
-    console.log(tag,"join-post", req.body, userSchema);
-    {
-        var email = req.body.email;
-        var password = req.body.password;
+    console.log(tag,"join-post", req.body);
+    var email = req.body.email;
+    var password = req.body.password;
 
-        var userData = new UserData({'email' : email, 'password' : password});
-        userData.save(function(err, silence){
-            if(err){
-                console.log(err);
-                res.status(500).send('update error');
-                return;
-             }
-             res.status(200).send("Inserted");    
-        }) 
-    }
+
+    UserData.find({'email' : email},(err, docs) => {
+        if(err) console.log('find' + err);
+        else if(docs.length > 0) res.status(500).send('사용중인 email입니다.')
+        else {
+            var userData = new UserData({'email' : email, 'password' : password});
+            userData.save(function(err, silence){
+                if(err){
+                    console.log(err);
+                    res.status(500).send('update error');
+                    return;
+                    }
+                    res.status(200).send("Inserted");    
+            })
+        }
+    })
 })
 
 app.post('/api/login', upload.single(), (req,res) => {
-    console.log(tag,"login-post", req.body, userSchema);
+    console.log(tag,"login-post", req.body);
+    var email = req.body.email;
+    var password = req.body.password;
 
-    res.send('post - login');
-})
+    UserData.find({'email' : email, 'password' : password},(err, docs) => {
+        if(err) console.log('find' + err);
+        else if(docs.length < 1) res.status(500).send('일차하는 정보가 없습니다')
+        else {
+            res.send("로그인 성공");
+        }
+    })})
 
 app.listen(port, () => {
     console.log(tag, `Listening port ${port}`);
