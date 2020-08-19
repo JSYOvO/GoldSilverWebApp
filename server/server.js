@@ -34,10 +34,8 @@ var UserData = mongoose.model('users',userSchema);
 const tag = "[server]";
 
 app.post('/api/join', upload.single(), (req,res) => {
-    console.log(tag,"join-post", req.body);
     var email = req.body.email;
     var password = req.body.password;
-
 
     UserData.find({'email' : email},(err, docs) => {
         if(err) console.log('find' + err);
@@ -50,14 +48,13 @@ app.post('/api/join', upload.single(), (req,res) => {
                     res.status(500).send('update error');
                     return;
                     }
-                    res.status(200).send("Inserted");    
+                    res.status(200).send("Inserted", email);
             })
         }
     })
 })
 
 app.post('/api/login', upload.single(), (req,res) => {
-    console.log(tag,"login-post", req.body);
     var email = req.body.email;
     var password = req.body.password;
 
@@ -65,9 +62,22 @@ app.post('/api/login', upload.single(), (req,res) => {
         if(err) console.log('find' + err);
         else if(docs.length < 1) res.status(500).send('일차하는 정보가 없습니다')
         else {
-            res.send("로그인 성공");
+            res.status(200).send(email);
         }
-    })})
+    })
+})
+
+app.post('/api/data', upload.single(), (req,res) => {
+    var email = req.body.email;
+
+    UserData.find({'email' : email},(err, docs) => {
+        if(err) console.log('find' + err);
+        else if(docs.length < 1) res.status(500).send('일차하는 정보가 없습니다')
+        else {
+            res.status(200).send(docs);
+        }
+    })
+})
 
 app.listen(port, () => {
     console.log(tag, `Listening port ${port}`);

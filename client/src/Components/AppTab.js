@@ -1,4 +1,6 @@
 import React from 'react';
+import AppUserData from './AppUserData';
+
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -42,11 +44,13 @@ class AppTab extends React.Component {
             loginPassword : "",
             joinInfoCorrect : true,
             loginInfoCorrect : true,
+            logined : false,
+            userEmail : ""
         }
     }
     
     componentDidMount() {
-        console.log(tag, "componentDidMount()");
+        console.log(tag, "componentDidMount()", this.state.logined);
     }
 
     handleLoginToggle = () => {
@@ -69,7 +73,7 @@ class AppTab extends React.Component {
     }
 
     handleChange = (e, type) => {
-        console.log(tag, "handleChange()", e.target.value, type);
+        //console.log(tag, "handleChange()", e.target.value, type);
         const value = e.target.value;
         const nextState = {};
         nextState[type] = value;
@@ -77,7 +81,7 @@ class AppTab extends React.Component {
     }
 
     validate = (data, type) => {
-        console.log(tag,"validate()", data, type);
+        //console.log(tag,"validate()", data, type);
 
         if(type === 'joinEmail' || type === 'loginEmail'){
             if(data.indexOf('@') < 0) return true;
@@ -126,17 +130,30 @@ class AppTab extends React.Component {
         if(this.state.loginEmail.length > 0 && this.state.loginPassword.length > 0){
             formData.append('email',this.state.loginEmail);
             formData.append('password',this.state.loginPassword);
-            const config = {
-                // headers : {'content-type' : 'multipart/form-data'}
-                headers : {'content-type' : 'application/x-www-form-urlencoded'}
-            }
-            return post(url,formData,config);
+            const config = { headers : {'content-type' : 'application/x-www-form-urlencoded'} }
+            post(url,formData,config).then((response) => {
+                 this.setState({
+                    logined : true,
+                    userEmail : response.data
+                 })
+                this.handleLoginToggle()
+                console.log("로그인 성공", response.data);
+            }).catch((error) => {
+                 console.log(error)
+            }) 
         }
         else{
             this.setState({
                 loginInfoCorrect : !this.state.loginInfoCorrect
             })
         }
+    }
+
+    handleLogout = () => {
+        this.setState({
+            logined : false,
+            userEmail : ""
+        })
     }
 
     onCloseJoinFail = () => {
@@ -161,12 +178,22 @@ class AppTab extends React.Component {
                             Gold&Silver Investing
                         </Typography>
                         <div>
+                            {!this.state.logined &&
                             <Button color="inherit" onClick={this.handleJoinToggle}>
                                 Join
-                            </Button>
-                            <Button color="inherit" onClick={this.handleLoginToggle}>
+                            </Button>}
+                            {!this.state.logined && 
+                            <Button hidden={!this.state.logined} color="inherit" onClick={this.handleLoginToggle}>
                                 Login
-                            </Button>
+                            </Button>}
+                            {this.state.logined &&
+                            <Button color="inherit">
+                                INFO
+                            </Button>}
+                            {this.state.logined && 
+                            <Button hidden={this.state.logined} color="inherit" onClick={this.handleLogout}>
+                                Logout
+                            </Button>}
                         </div>
                     </Toolbar>
                 </AppBar>
@@ -246,6 +273,7 @@ class AppTab extends React.Component {
                     onClose = {this.onCloseLoginFail}
                     message="로그인 정보를 확인하세요"
                 />
+                {this.state.logined && <AppUserData userEmail = {this.state.userEmail}/>}                
             </div>
         )
     }
