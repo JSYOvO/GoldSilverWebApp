@@ -1,29 +1,75 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import {post} from 'axios';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import {post, get} from 'axios';
+import { Button } from '@material-ui/core';
 
 const tag = "[AppUserData]";
+
+const styles = {
+    root : {
+        align:'center',
+    },
+    paper : {
+        width:"70%",
+        paddingLeft : "15%",
+        paddingTop : "5%",
+        //display : "flex"
+    },
+    card : {
+        width : "100%",
+        height : "100%",
+        display : "flex"
+    },
+    avatar: {
+        backgroundColor: "#ebe4e4",
+    },
+    media: {
+        // height: "100%",
+        paddingTop: '10%', // 16:9
+        paddingLeft: '10%'
+    },
+};
+
 class AppUserData extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            eagleCount : 0,
-            mapleCount : 0,
-            britCount : 0,
-            kangCount : 0,
-            barCount : 0,
-            eaglePrice : 0,
-            maplePrice : 0,
-            britPrice : 0,
-            kangPrice : 0,
-            barPrice : 0
+            SilverEagleURL : "",
+            SilverMapleURL : "",
+            SilverBritanniaURL : "",
+            SilverKangarooURL : "",
+            SilverData : [{
+                title : "",
+                price : 0,
+                count : 0,
+                cols : 1,
+                url : ""
+            }]
         }
     }   
     
     componentDidMount(){
         console.log(tag, "componentDidMount()");
+        this.getImage('Silver-Eagle');
+        this.getImage('Silver-Britannia');
+        this.getImage('Silver-Maple');
+        this.getImage('Silver-Kangaroo');
         this.getData();
+        this.setState({
+            SilverData : this.state.SilverData.slice(1, this.state.SilverData.length)
+        })
     }
 
     getData = () => {
@@ -34,49 +80,92 @@ class AppUserData extends React.Component{
         formData.append('email',this.props.userEmail);
         const config = { headers : {'content-type' : 'application/x-www-form-urlencoded'} }
         
-        post(url,formData,config).then((response) => {
-                this.setState({
-                    eagleCount : response.data[0].eagle.count,
-                    mapleCount : response.data[0].maple.count,
-                    britCount : response.data[0].brit.count,
-                    kangCount : response.data[0].kang.count,
-                    barCount : response.data[0].bar.count,
-                    eaglePrice : response.data[0].eagle.price,
-                    maplePrice : response.data[0].maple.price,
-                    britPrice : response.data[0].brit.price,
-                    kangPrice : response.data[0].kang.price,
-                    barPrice : response.data[0].bar.price
-                })
-            console.log("getData 성공", response.data[0]);
-        }).catch((error) => {
+        post(url,formData,config)
+        .then((response) => {
+            console.log(response.data[0]);
+            this.setState({
+                SilverData : this.state.SilverData.concat({
+                    title:"Silver Eagle", 
+                    count : response.data[0].eagle.count, 
+                    price : response.data[0].eagle.price, 
+                    cols : 1,
+                    url : this.state.SilverEagleURL
+                },{
+                    title:"Silver Britannia", 
+                    count : response.data[0].brit.count, 
+                    price : response.data[0].brit.price, 
+                    cols : 1,
+                    url : this.state.SilverBritanniaURL
+                },{
+                    title:"Silver Maple", 
+                    count : response.data[0].maple.count, 
+                    price : response.data[0].maple.price, 
+                    cols : 1,
+                    url : this.state.SilverMapleURL
+                },{
+                    title:"Silver Kangaroo", 
+                    count : response.data[0].kang.count, 
+                    price : response.data[0].kang.price, 
+                    cols : 1,
+                    url : this.state.SilverKangarooURL
+                }),
+            })    
+        
+            console.log(this.state.SilverData);
+
+        })
+        .catch((error) => {
                 console.log(error)
         })
     }
 
+    getImage = (data) => {
+        const url = 'http://localhost:3000/api/public/' + data;
+        
+        get(url)
+        .then((res) => {
+            console.log(tag, `getImage(${data})`, url);
+            if(data === 'Silver-Eagle') this.setState({SilverEagleURL : url})
+            else if(data === 'Silver-Britannia') this.setState({SilverBritanniaURL : url})
+            else if(data === 'Silver-Maple') this.setState({SilverMapleURL : url})
+            else if(data === 'Silver-Kangaroo') this.setState({SilverKangarooURL : url})
+        })
+        .catch((error) => {
+            return error;
+        })        
+    }
+
     render(){     
+        const {classes} = this.props;
+
         return(
-            <Container fixed>
-                <Typography component="div" style={{ backgroundColor: '#93f5b5'}}>
-                    Display {this.props.userEmail} Data
-                    <br/>
-                    EAGLE : {this.state.eagleCount} 개, {this.state.eaglePrice} 원, 평당 : {this.state.eaglePrice/this.state.eagleCount} 원
-                    <br/>
-                    MAPLE : {this.state.mapleCount} 개, {this.state.maplePrice} 원, 평당 : {this.state.maplePrice/this.state.mapleCount} 원
-                    <br/>
-                    BRIT : {this.state.britCount} 개, {this.state.britPrice} 원, 평당 : {this.state.britPrice/this.state.britCount} 원
-                    <br/>
-                    KANG : {this.state.kangCount} 개, {this.state.kangPrice} 원, 평당 : {this.state.kangPrice/this.state.kangCount} 원
-                    <br/>
-                    COIN TOTAL : {this.state.eagleCount + this.state.mapleCount + this.state.britCount + this.state.kangCount} 개, 
-                    {this.state.eaglePrice + this.state.maplePrice + this.state.britPrice + this.state.kangPrice} 원, 
-                    평단 : {(this.state.eaglePrice + this.state.maplePrice + this.state.britPrice + this.state.kangPrice) / (this.state.eagleCount + this.state.mapleCount + this.state.britCount + this.state.kangCount)} 원, 
-                    <br/>
-                    BAR : {this.state.barCount} 개, {this.state.barPrice} 원, 평당 : {this.state.barPrice/this.state.barCount} 원
-                    
-                </Typography>
-            </Container>
+            <div class={classes.root}>
+                <Paper class={classes.paper} elevation={3}>
+                    {this.state.SilverData.map(v => {
+                        if(v.count >= 0){
+                            return(
+                                <Card class={classes.card}>
+                                    <CardHeader
+                                        avatar={<Avatar aria-label="recipe" className={classes.avatar} src={v.url}/>}
+                                        title={v.title}
+                                    />
+                                    <CardContent>
+                                        <Typography variant="body1" component="p">
+                                            현재단가 : ?  구매단가 : {v.price / v.count}  구매수량 : {v.count} 구매총가 : {v.price} 수익률 : {}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button variant="contained" color="#f5f52f">수정</Button>
+                                    </CardActions>
+                                </Card>
+                            )
+                        }
+                    })}
+                </Paper>
+            </div>
+            
         )
     }
 }
 
-export default AppUserData;
+export default withStyles(styles)(AppUserData);

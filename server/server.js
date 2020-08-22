@@ -12,7 +12,7 @@ const upload = multer();
 app.use(cors());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
-
+app.use(express.static(__dirname + '/public'))
 
 var db = mongoose.connection;
 db.on('error', console.error);
@@ -77,6 +77,10 @@ app.post('/api/data', upload.single(), (req,res) => {
             res.status(200).send(docs);
         }
     })
+})
+
+app.get('/api/public/:id',(req,res) => {
+    res.status(200).sendFile(__dirname + '/public/' + req.params.id + '.jpg');
 })
 
 app.listen(port, () => {
