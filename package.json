@@ -17,9 +17,12 @@
         "@testing-library/user-event": "^7.1.2",
         "axios": "^0.19.2",
         "body-parser": "^1.19.0",
+        "cctx": "^1.0.1",
+        "ccxt": "^1.33.39",
         "concurrently": "^5.3.0",
         "constants": "^0.0.2",
         "cors": "^2.8.5",
+        "cors-anywhere": "^0.4.3",
         "express": "^4.17.1",
         "fs": "^0.0.1-security",
         "http-proxy-middleware": "^1.0.5",
@@ -30,7 +33,10 @@
         "nodemon": "^2.0.4",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
-        "react-scripts": "3.4.3"
+        "react-scripts": "3.4.3",
+        "robinhood": "^1.6.5",
+        "unirest": "^0.6.0",
+        "yahoo-finance": "^0.3.6"
     },
     "repository": "https://github.com/JSYOvO/GoldSilverWebApp.git"
 }

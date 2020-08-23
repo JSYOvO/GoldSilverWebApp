@@ -175,7 +175,7 @@ class AppTab extends React.Component {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.menuTitle}>
-                            Gold&Silver Investing
+                            Silver Investing
                         </Typography>
                         <div>
                             {!this.state.logined &&

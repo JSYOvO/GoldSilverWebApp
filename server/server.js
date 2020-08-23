@@ -8,11 +8,29 @@ const app = express();
 const port = process.env.PORT || 5000;
 const multer = require('multer');
 const upload = multer();
+const yahooFinance = require('yahoo-finance');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'))
+
+
+// var httpRequestOptions = {
+//     proxy: 'https://finance.yahoo.com',
+// };
+
+// yahooFinance.historical({
+//     symbol: 'AAPL',
+//   from: '2020-08-01',
+//   to: '2020-8-20',
+//   // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
+// }, httpRequestOptions, function (err, quotes) {
+//   console.log("his", quotes);
+// });
+
+// This replaces the deprecated snapshot() API
+
 
 var db = mongoose.connection;
 db.on('error', console.error);
@@ -81,6 +99,16 @@ app.post('/api/data', upload.single(), (req,res) => {
 
 app.get('/api/public/:id',(req,res) => {
     res.status(200).sendFile(__dirname + '/public/' + req.params.id + '.jpg');
+})
+
+app.get('/api/trend', (req, res) => {
+    yahooFinance.quote({
+        symbol: 'SI=F',
+        modules: [ 'price', 'summaryDetail' ] // see the docs for the full list
+      }, function (err, quotes) {
+          res.status(200).send(quotes);
+      });
+      
 })
 
 app.listen(port, () => {

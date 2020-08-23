@@ -1,19 +1,20 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+
+
 import {post, get} from 'axios';
 import { Button } from '@material-ui/core';
+import { promises } from 'fs';
 
 const tag = "[AppUserData]";
 
@@ -22,23 +23,40 @@ const styles = {
         align:'center',
     },
     paper : {
-        width:"70%",
-        paddingLeft : "15%",
-        paddingTop : "5%",
+        width:"90%",
+        paddingLeft : "5%",
+        paddingRight : "5%",
+        paddingTop : "2.5%",
+        paddingBottom : "2.5%",
         //display : "flex"
-    },
-    card : {
-        width : "100%",
-        height : "100%",
-        display : "flex"
     },
     avatar: {
         backgroundColor: "#ebe4e4",
+        width : "20px",
+        height : "20px",
     },
     media: {
         // height: "100%",
         paddingTop: '10%', // 16:9
         paddingLeft: '10%'
+    },
+    image: {
+        width: 24,
+        height: 24,
+    },
+    gridItem:{
+        display:'flex',
+    },
+    grid: {
+        borderRadius : 5,
+        borderStyle: 'solid',
+        borderWidth : '0.5px',
+        borderColor : '#aaa',
+        marginTop : "2.5%",
+        marginBottom : "2.5%",
+    },
+    Typography : {
+        marginLeft:'5px'
     },
 };
 
@@ -46,6 +64,7 @@ class AppUserData extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            changeToggle : false,
             SilverEagleURL : "",
             SilverMapleURL : "",
             SilverBritanniaURL : "",
@@ -56,17 +75,18 @@ class AppUserData extends React.Component{
                 count : 0,
                 cols : 1,
                 url : ""
-            }]
+            }],
         }
     }   
     
     componentDidMount(){
         console.log(tag, "componentDidMount()");
-        this.getImage('Silver-Eagle');
-        this.getImage('Silver-Britannia');
-        this.getImage('Silver-Maple');
-        this.getImage('Silver-Kangaroo');
-        this.getData();
+        // this.getImagePromise(['Silver-Eagle','Silver-Britannia','Silver-Maple','Silver-Kangaroo'])        
+        this.getImagePromise('Silver-Eagle')        
+        .then((res) => this.getImagePromise('Silver-Britannia')
+        .then((res) => this.getImagePromise('Silver-Maple')
+        .then((res) => this.getImagePromise('Silver-Kangaroo')
+        .then((res) => this.getData()))))
         this.setState({
             SilverData : this.state.SilverData.slice(1, this.state.SilverData.length)
         })
@@ -119,48 +139,110 @@ class AppUserData extends React.Component{
         })
     }
 
-    getImage = (data) => {
-        const url = 'http://localhost:3000/api/public/' + data;
-        
-        get(url)
-        .then((res) => {
-            console.log(tag, `getImage(${data})`, url);
-            if(data === 'Silver-Eagle') this.setState({SilverEagleURL : url})
-            else if(data === 'Silver-Britannia') this.setState({SilverBritanniaURL : url})
-            else if(data === 'Silver-Maple') this.setState({SilverMapleURL : url})
-            else if(data === 'Silver-Kangaroo') this.setState({SilverKangarooURL : url})
+    getImagePromise = (data) => {
+        return new Promise((response, reject) => {
+            const url = 'http://localhost:3000/api/public/' + data; 
+                get(url)
+                .then((res) => {
+                    console.log(tag, `getImage(${data})`, url);
+                    if(data === 'Silver-Eagle') this.setState({SilverEagleURL : url})
+                    else if(data === 'Silver-Britannia') this.setState({SilverBritanniaURL : url})
+                    else if(data === 'Silver-Maple') this.setState({SilverMapleURL : url})
+                    else if(data === 'Silver-Kangaroo') this.setState({SilverKangarooURL : url})
+                    response("Sucess Getting Image Url");
+                })
+                .catch((error) => {
+                    reject(error)
+                })    
         })
-        .catch((error) => {
-            return error;
-        })        
+    }
+
+    handleChangeToggle = (e) => {
+        console.log(tag, "handleChangeToggle()", e.target);
+        this.setState({changeToggle : !this.state.changeToggle})
     }
 
     render(){     
         const {classes} = this.props;
+        var sumCount=0, sumPrice=0, sumRealPrice=0;
 
         return(
             <div class={classes.root}>
                 <Paper class={classes.paper} elevation={3}>
-                    {this.state.SilverData.map(v => {
+                    {this.state.SilverData.map((v, index) => {
+                        sumCount += v.count;
+                        sumPrice += v.price;
+                        sumRealPrice += 40000*v.count;
+                        
                         if(v.count >= 0){
                             return(
-                                <Card class={classes.card}>
-                                    <CardHeader
-                                        avatar={<Avatar aria-label="recipe" className={classes.avatar} src={v.url}/>}
-                                        title={v.title}
-                                    />
-                                    <CardContent>
-                                        <Typography variant="body1" component="p">
-                                            현재단가 : ?  구매단가 : {v.price / v.count}  구매수량 : {v.count} 구매총가 : {v.price} 수익률 : {}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button variant="contained" color="#f5f52f">수정</Button>
-                                    </CardActions>
-                                </Card>
+                                <div>
+                                    <Grid container spacing={2} className={classes.grid} onClick={this.handleChangeToggle}>
+                                        <Grid item className={classes.gridItem} xs={12}>
+                                            <Avatar aria-label="recipe" className={classes.avatar} src={v.url}/>
+                                            <Typography variant="body1" className={classes.Typography}>{v.title}</Typography>
+                                        </Grid>
+                                        <Grid item xs={6} >
+                                            <Typography variant="body2" className={classes.Typography}>
+                                                현재가 : 40,000 
+                                            </Typography>
+                                            <Typography variant="body2" className={classes.Typography}>
+                                                잔고수량 : {v.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} 
+                                            </Typography>
+                                            <Typography variant="body2" className={classes.Typography}>
+                                                평가순익 : {(40000 * v.count - v.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Typography variant="body2" className={classes.Typography}>
+                                                매입가 : {Math.round(v.price / v.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                            </Typography>
+                                            <Typography variant="body2" className={classes.Typography}>
+                                                평가금액 : {(40000 * v.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                            </Typography>
+                                            <Typography variant="body2" className={classes.Typography}>
+                                                수익률 : {(Math.round(((40000 * v.count - v.price)*10000)/v.price)/100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    
+
+                                    <Dialog open={this.state.changeToggle}>
+                                        <DialogTitle>구매리스트 변경</DialogTitle>
+                                        <DialogContent>
+                                            <Button color="primary">
+                                                매수
+                                            </Button>
+                                            <Button color="secondary">
+                                                매도
+                                            </Button>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
                             )
-                        }
+                        }                        
                     })}
+                    <Grid container spacing={2} className={classes.grid}>
+                        <Grid item className={classes.gridItem} xs={12}>
+                            <Typography variant="body1" className={classes.Typography}>TOTAL</Typography>
+                        </Grid>
+                        <Grid item xs={6} >
+                            <Typography variant="body2" className={classes.Typography}>
+                                총 자산 : {sumRealPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                            </Typography>
+                            <Typography variant="body2" className={classes.Typography}>
+                                손 익 : {(sumRealPrice - sumPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} 
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="body2" className={classes.Typography}>
+                                수익률 : {(Math.round((sumRealPrice - sumPrice)*10000/sumPrice)/100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%
+                            </Typography>
+                            <Typography variant="body2" className={classes.Typography}>
+                                매입금액 : {sumPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                            </Typography>                                    
+                        </Grid>
+                    </Grid>
                 </Paper>
             </div>
             
