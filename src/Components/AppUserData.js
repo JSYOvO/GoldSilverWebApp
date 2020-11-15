@@ -10,6 +10,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
+import NativeSelect from '@material-ui/core/NativeSelect';
+
 
 
 import {post, get} from 'axios';
@@ -65,6 +67,15 @@ class AppUserData extends React.Component{
         super(props);
         this.state = {
             changeToggle : false,
+            changeToggleBuy : false,
+            changeToggleSell : false,
+            buyItem : "",
+            buyCount : 0,
+            buyCost : 0,
+            sellItem : "",
+            sellCount : 0,
+            sellCost : 0,
+            nowChanging : "",
             SilverEagleURL : "",
             SilverMapleURL : "",
             SilverBritanniaURL : "",
@@ -156,10 +167,36 @@ class AppUserData extends React.Component{
                 })    
         })
     }
+    handleChange = (e, type) => {
+        //console.log(tag, "handleChange()", e.target.value);
+        console.log("sellItem : ", this.state.sellItem," / sellCount : ", this.state.sellCount, " / sellCost : ", this.state.sellCost);
+        console.log("buyItem : ", this.state.buyItem," / buyCount : ", this.state.buyCount, " / buyCost : ", this.state.buyCost);
+        const value = e.target.value;
+        const nextState = {};
+        nextState[type] = value;
+        this.setState(nextState);
+    }
 
     handleChangeToggle = (e) => {
         console.log(tag, "handleChangeToggle()", e.target);
-        this.setState({changeToggle : !this.state.changeToggle})
+        this.setState({
+            changeToggle : !this.state.changeToggle,
+            changeToggleBuy : false,
+            changeToggleSell : false,
+
+        })
+    }
+    handleChangeToggleBuy = (e) => {
+        this.setState({changeToggleBuy : !this.state.changeToggleBuy})
+    }
+    handleChangeToggleSell = (e) => {
+        this.setState({changeToggleSell : !this.state.changeToggleSell})
+    }
+    handleClickChange = (e, type) => {
+        if(type === 'buy'){
+             
+        }
+
     }
 
     render(){     
@@ -177,7 +214,7 @@ class AppUserData extends React.Component{
                         if(v.count >= 0){
                             return(
                                 <div>
-                                    <Grid container spacing={2} className={classes.grid} onClick={this.handleChangeToggle}>
+                                    <Grid container spacing={2} className={classes.grid}>
                                         <Grid item className={classes.gridItem} xs={12}>
                                             <Avatar aria-label="recipe" className={classes.avatar} src={v.url}/>
                                             <Typography variant="body1" className={classes.Typography}>{v.title}</Typography>
@@ -205,19 +242,6 @@ class AppUserData extends React.Component{
                                             </Typography>
                                         </Grid>
                                     </Grid>
-                                    
-
-                                    <Dialog open={this.state.changeToggle}>
-                                        <DialogTitle>구매리스트 변경</DialogTitle>
-                                        <DialogContent>
-                                            <Button color="primary">
-                                                매수
-                                            </Button>
-                                            <Button color="secondary">
-                                                매도
-                                            </Button>
-                                        </DialogContent>
-                                    </Dialog>
                                 </div>
                             )
                         }                        
@@ -243,6 +267,135 @@ class AppUserData extends React.Component{
                             </Typography>                                    
                         </Grid>
                     </Grid>
+                    <Grid container spacing={2} className={classes.grid}>
+                        <Grid xs={4}/>
+                        <Grid item className={classes.gridItem} xs={4}>
+                            <Button color="default" onClick={this.handleChangeToggle}>
+                                데이터 변경
+                            </Button>
+                        </Grid>
+                        <Grid xs={4}/>
+                    </Grid>
+
+                    <Dialog open={this.state.changeToggle} onClose={this.handleChangeToggle}>
+                        <DialogTitle>구매리스트 변경</DialogTitle>
+                            {(!this.state.changeToggleBuy&&!this.state.changeToggleSell) && 
+                                <DialogContent>
+                                    <Button color="primary" onClick={this.handleChangeToggleBuy}>
+                                        매수
+                                    </Button>
+                                    <Button color="secondary" onClick={this.handleChangeToggleSell}>
+                                        매도
+                                    </Button>
+                                </DialogContent>
+                            }
+                            {(this.state.changeToggleBuy&&!this.state.changeToggleSell) && 
+                                <DialogContent>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={4}>
+                                            변경자산
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <NativeSelect onChange={e => this.handleChange(e,'buyItem')}>
+                                                <option aria-label="None"/>
+                                                <option value={"Eagle"}> SilverCoin Eagle</option>
+                                                <option value={"Britannia"}> SilverCoin Britannia </option>
+                                                <option value={"Maple"}> SilverCoin Maple </option>
+                                                <option value={"Kangaroo"}> SilverCoin Kangaroo </option>
+                                            </NativeSelect>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            구매수량
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <TextField class={classes.DialogTextFiled}
+                                                autoFocus
+                                                margin="dense"
+                                                id="count"
+                                                type="number"
+                                                onChange={e => this.handleChange(e,'buyCount')}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            구매단가
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <TextField class={classes.DialogTextFiled}
+                                                autoFocus
+                                                margin="dense"
+                                                id="cost"
+                                                type="number"
+                                                onChange={e => this.handleChange(e,'buyCost')}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}/>
+                                        <Grid item xs={4}>
+                                            <Button color="primary" onClick={e => this.handleClickChange('buy')}>
+                                                변경
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <Button color="secondary" onClick={this.handleChangeToggle}>
+                                                취소
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </DialogContent>
+                            }
+                            {(!this.state.changeToggleBuy&&this.state.changeToggleSell) && 
+                                <DialogContent>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={4}>
+                                            변경자산
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <NativeSelect onChange={e => this.handleChange(e,'sellItem')}>
+                                                <option aria-label="None"/>
+                                                <option value={"Eagle"}> SilverCoin Eagle</option>
+                                                <option value={"Britannia"}> SilverCoin Britannia </option>
+                                                <option value={"Maple"}> SilverCoin Maple </option>
+                                                <option value={"Kangaroo"}> SilverCoin Kangaroo </option>
+                                            </NativeSelect>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            판매수량
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <TextField class={classes.DialogTextFiled}
+                                                autoFocus
+                                                margin="dense"
+                                                id="count"
+                                                type="number"
+                                                onChange={e => this.handleChange(e,'sellCount')}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            판매단가
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <TextField class={classes.DialogTextFiled}
+                                                autoFocus
+                                                margin="dense"
+                                                id="cost"
+                                                type="number"
+                                                onChange={e => this.handleChange(e,'sellCost')}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}/>
+                                        <Grid item xs={4}>
+                                            <Button color="primary" onClick={e => this.handleClickChange(e,'sell')}>
+                                                변경
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <Button color="secondary" onClick={this.handleChangeToggle}>
+                                                취소
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </DialogContent>
+                            }             
+                     </Dialog>
                 </Paper>
             </div>
             
