@@ -1,10 +1,15 @@
 import React from 'react';
 import './Main.css';
+import Header from '../Header/Header.js';
+import Top from './Top/Top.js';
+import About from './About/About.js';
 
 function Main() {
     return (
-        <div className="main">
-            <h1>MAin</h1>
+        <div className="main"> 
+            <Header />
+            <Top />
+            <About />
         </div>
     )
 }
