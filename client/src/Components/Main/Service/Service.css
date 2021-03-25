@@ -1,0 +1,14 @@
+.service {
+    background-color: #FBFDFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    width: 70%;
+    padding-left: 20%;
+}
+
+.service__top {
+    display: flex;
+    flex-direction: column;
+}

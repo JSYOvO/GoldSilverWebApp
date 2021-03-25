@@ -3,6 +3,8 @@ import './Main.css';
 import Header from '../Header/Header.js';
 import Top from './Top/Top.js';
 import About from './About/About.js';
+import Service from './Service/Service.js';
+import Resource from './Resource/Resource.js';
 
 function Main() {
     return (
@@ -10,6 +12,8 @@ function Main() {
             <Header />
             <Top />
             <About />
+            <Service />
+            <Resource />
         </div>
     )
 }
