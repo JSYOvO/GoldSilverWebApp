@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { GoldModule } from './gold/gold.module';
-import { SilverModule } from './silver/silver.module';
+import { AppService } from './app.service';
 
 @Module({
-  imports: [GoldModule, SilverModule],
+  imports: [],
   controllers: [AppController],
-  providers: [],
+  providers: [AppService],
 })
 export class AppModule {}
