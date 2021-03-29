@@ -1,11 +1,11 @@
 .home {
-  /* make background black later */
   background-color: black;
   margin: 0;
   display: grid;
   place-items: center;
   z-index: -1;
-  height: 100vh;
+  height: 100%;
+  padding-bottom: 120px;
 }
 
 .home__container {

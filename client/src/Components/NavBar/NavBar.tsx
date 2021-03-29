@@ -16,12 +16,6 @@ const NavBar: React.FC<NavBar> = () => {
           <h1>JSYOvO Invest</h1>
         </Link>
       </div>
-      <div className="header__search">
-        <div className="header__searchContainer">
-          <SearchOutlined />
-          <input placeholder="Search" type="text" />
-        </div>
-      </div>
       <div className="header__menuItems">
         <Link to="/free">
           <h1>Free Stocks</h1>

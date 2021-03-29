@@ -23,17 +23,6 @@ const NewsFeed: React.FC<NewsFeed> = ({}) => {
         setPrice(res.data.price.regularMarketPrice.raw);
         setChange(res.data.price.regularMarketChangePercent.fmt);
       });
-
-    // axios
-    //   .get(`http://localhost:4000/gold/1`, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     // setPriceDayAgo(res.data);
-    //   });
   }, []);
 
   return (

@@ -5,7 +5,6 @@
 .timeline__wrapper {
   display: flex;
   align-items: center;
-  padding-bottom: 0px;
 }
 
 .timeline__live {
@@ -18,7 +17,6 @@
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  padding-bottom: 0px;
 }
 .timeline__button {
   font-weight: bold;

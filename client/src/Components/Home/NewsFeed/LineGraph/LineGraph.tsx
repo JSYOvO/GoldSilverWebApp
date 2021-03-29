@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 
@@ -51,21 +52,37 @@ const options = {
     ],
   },
 };
+interface IData {
+  x: Date;
+  y: string;
+}
 
 const LineGraph: React.FC<LineGraph> = (prop) => {
-  const [data, setData] = useState<any>({});
-
+  const [data, setData] = useState<IData[]>([]);
+  const [originData, setOriginData] = useState<IData[]>([]);
+  console.log(prop.symbol);
   useEffect(() => {
-    let data = [];
-    let value = 50;
-    for (var i = 0; i < 366; i++) {
-      let date = new Date();
-      date.setHours(0, 0, 0, 0);
-      date.setDate(i);
-      value += Math.round((Math.random() < 0.5 ? 1 : 0) * Math.random() * 10);
-      data.push({ x: date, y: value });
-    }
-    setData(data);
+    axios
+      .get(`http://localhost:4000/chart/gold/1y`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((res) => {
+        const timestamp: any = res.data.chart.result[0].timestamp;
+        const openPrice: any =
+          res.data.chart.result[0].indicators.quote[0].open;
+
+        setOriginData(res.data.chart.result);
+        let tmpData = [];
+        for (let i = 0; i < timestamp.length; i++) {
+          tmpData.push({
+            x: new Date(timestamp[i] * 1000),
+            y: openPrice[i],
+          });
+        }
+        setData(tmpData);
+      });
   }, []);
 
   return (

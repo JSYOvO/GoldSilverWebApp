@@ -2,4 +2,5 @@
   background-color: black;
   /* height: fit-content; */
   place-items: center;
+  height: 100vh;
 }
