@@ -1,15 +1,17 @@
-import { Box } from '@chakra-ui/layout';
-import React, { useState } from 'react';
-import Data from './Data/Data';
-
+import React from 'react';
+import NewsFeed from './NewsFeed/NewsFeed';
+import Stat from './Stat/Stat';
+import './Home.css';
 interface Home {}
 
 const Home: React.FC<Home> = ({}) => {
   return (
-    <Box display="flex" justifyContent="space-evenly">
-      <Data label="gold" />
-      <Data label="silver" />
-    </Box>
+    <div className="home">
+      <div className="home__container">
+        <NewsFeed />
+        <Stat />
+      </div>
+    </div>
   );
 };
 

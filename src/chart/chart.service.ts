@@ -2,17 +2,16 @@ import { HttpService, Injectable } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class GoldService {
+export class ChartService {
   constructor(private httpService: HttpService) {}
 
-  public async getGold(dateAgo: number) {
+  public async getChart(dateAgo: number) {
     const now = new Date();
 
     const nowYear = now.getFullYear();
     const nowMonth = now.getMonth() + 1;
     const nowDay = now.getDay();
     if (nowDay == 0) dateAgo += 2;
-    if (nowDay == 1) dateAgo += 3;
     if (nowDay == 6) dateAgo += 1;
     const nowDate = now.getDate() - dateAgo;
 
@@ -20,21 +19,14 @@ export class GoldService {
       nowYear.toString() +
       (nowMonth < 10 ? '0' + nowMonth : nowMonth) +
       (nowDate < 10 ? '0' + nowDate : nowDate);
-    console.log(dateInfo);
 
-    const ENDURL_GOLD = `https://www.goldapi.io/api/XAU/USD/` + dateInfo;
-    // const ENDURL_GOLD = `https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-chart`;
+    // const ENDURL_GOLD = `https://www.goldapi.io/api/XAU/USD/` + dateInfo;
+    const ENDURL_GOLD = `https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-chart`;
 
     const GOLD_INFO = this.httpService
       .get(ENDURL_GOLD)
       .pipe(map((response) => response.data));
 
     return GOLD_INFO;
-  }
-
-  public getExchangeRate() {
-    const ENDURL = ``;
-
-    return this.httpService.get(ENDURL).pipe(map((response) => response.data));
   }
 }

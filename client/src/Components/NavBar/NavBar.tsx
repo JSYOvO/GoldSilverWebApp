@@ -1,132 +1,46 @@
-import { Box, Button, Flex, Stack } from '@chakra-ui/react';
-import React from 'react';
+import { SearchOutlined } from '@material-ui/icons';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import './NavBar.css';
 interface NavBar {}
 
 const NavBar: React.FC<NavBar> = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <NavBarContainer>
-      <Link to="/">
-        <Button
-          size="lg"
-          rounded="md"
-          color={'purple'}
-          bg={'transparent'}
-          _hover={
-            {
-              // bg: 'purple',
-              // color: 'white',
-            }
-          }
-        >
-          MeTali
-        </Button>
-      </Link>
-
-      <MenuToggle toggle={toggle} isOpen={isOpen} />
-      <MenuLinks isOpen={isOpen} />
-    </NavBarContainer>
+    <div className="header__wrapper">
+      <div className="header__logo">
+        <Link to="/">
+          <h1>JSYOvO Invest</h1>
+        </Link>
+      </div>
+      <div className="header__search">
+        <div className="header__searchContainer">
+          <SearchOutlined />
+          <input placeholder="Search" type="text" />
+        </div>
+      </div>
+      <div className="header__menuItems">
+        <Link to="/free">
+          <h1>Free Stocks</h1>
+        </Link>
+        <Link to="/porifolio">
+          <h1>PortFolio</h1>
+        </Link>
+        <Link to="/Cash">
+          <h1>Cash</h1>
+        </Link>
+        <Link to="/Messages">
+          <h1>Messages</h1>
+        </Link>
+        {/* <Link to="/Account">
+          <h1>Account</h1>
+        </Link> */}
+      </div>
+    </div>
   );
 };
 
 export default NavBar;
-
-const CloseIcon = () => (
-  <svg width="24" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-    <title>Close</title>
-    <path
-      fill="white"
-      d="M9.00023 7.58599L13.9502 2.63599L15.3642 4.04999L10.4142 8.99999L15.3642 13.95L13.9502 15.364L9.00023 10.414L4.05023 15.364L2.63623 13.95L7.58623 8.99999L2.63623 4.04999L4.05023 2.63599L9.00023 7.58599Z"
-    />
-  </svg>
-);
-
-const MenuIcon = () => (
-  <svg
-    width="24px"
-    viewBox="0 0 20 20"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="white"
-  >
-    <title>Menu</title>
-    <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-  </svg>
-);
-
-const MenuToggle = ({ toggle, isOpen }: any) => {
-  return (
-    <Box display={{ base: 'block', md: 'none' }} onClick={toggle}>
-      {isOpen ? <CloseIcon /> : <MenuIcon />}
-      asdasd
-    </Box>
-  );
-};
-
-const MenuLinks = ({ isOpen, refetch }: any) => {
-  return (
-    <Box
-      display={{ base: isOpen ? 'block' : 'none', md: 'block' }}
-      flexBasis={{ base: '100%', md: 'auto' }}
-    >
-      <Stack
-        spacing={8}
-        align="center"
-        justify={['center', 'space-between', 'flex-end', 'flex-end']}
-        direction={['column', 'row', 'row', 'row']}
-        pt={[4, 4, 0, 0]}
-      >
-        <Link to="/join">
-          <Button
-            size="lg"
-            rounded="md"
-            color={'purple'}
-            bg={'transparent'}
-            _hover={{
-              bg: 'purple',
-              color: 'white',
-            }}
-          >
-            Sign up
-          </Button>
-        </Link>
-        <Link to="/login">
-          <Button
-            size="lg"
-            rounded="md"
-            color={'purple'}
-            bg={'transparent'}
-            _hover={{
-              bg: 'purple',
-              color: 'white',
-            }}
-          >
-            Sign in
-          </Button>
-        </Link>
-      </Stack>
-    </Box>
-  );
-};
-
-const NavBarContainer = ({ children, ...props }: any) => {
-  return (
-    <Flex
-      as="nav"
-      align="center"
-      justify="space-between"
-      wrap="wrap"
-      w="100%"
-      mb={8}
-      p={8}
-      bg={'transparent'}
-      {...props}
-    >
-      {children}
-    </Flex>
-  );
-};

@@ -7,7 +7,11 @@ export class SilverService {
   public async getPrice(dateAgo: number) {
     const now = new Date();
     const nowYear = now.getFullYear();
-    const nowMonth = now.getMonth();
+    const nowMonth = now.getMonth() + 1;
+    const nowDay = now.getDay();
+    if (nowDay == 0) dateAgo += 2;
+    if (nowDay == 1) dateAgo += 3;
+    if (nowDay == 6) dateAgo += 1;
     const nowDate = now.getDate() - dateAgo;
     const dateInfo =
       nowYear.toString() +
