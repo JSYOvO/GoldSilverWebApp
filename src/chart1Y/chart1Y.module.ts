@@ -1,6 +1,6 @@
 import { HttpModule, Module } from '@nestjs/common';
-import { ChartService } from './chart.service';
-import { ChartController } from './chart.controller';
+import { Chart1YService } from './chart1Y.service';
+import { Chart1YController } from './chart1Y.controller';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { ChartController } from './chart.controller';
       },
     }),
   ],
-  providers: [ChartService],
-  controllers: [ChartController],
+  providers: [Chart1YService],
+  controllers: [Chart1YController],
 })
-export class ChartModule {}
+export class Chart1YModule {}

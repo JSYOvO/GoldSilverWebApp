@@ -59,11 +59,10 @@ interface IData {
 
 const LineGraph: React.FC<LineGraph> = (prop) => {
   const [data, setData] = useState<IData[]>([]);
-  const [originData, setOriginData] = useState<IData[]>([]);
   console.log(prop.symbol);
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/chart/gold/1y`, {
+      .get(`http://localhost:4000/chart/5d/gold`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -73,7 +72,6 @@ const LineGraph: React.FC<LineGraph> = (prop) => {
         const openPrice: any =
           res.data.chart.result[0].indicators.quote[0].open;
 
-        setOriginData(res.data.chart.result);
         let tmpData = [];
         for (let i = 0; i < timestamp.length; i++) {
           tmpData.push({

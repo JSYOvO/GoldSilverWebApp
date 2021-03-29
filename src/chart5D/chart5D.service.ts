@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 const ENDURL = `https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-chart`;
 
 @Injectable()
-export class ChartService {
+export class Chart5DService {
   constructor(private httpService: HttpService) {}
 
   public async getGoldChart() {

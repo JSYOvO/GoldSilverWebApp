@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Chip } from '@material-ui/core';
-import './NewsFeed.css';
-import LineGraph from './LineGraph/LineGraph';
-import TimeLine from './TimeLine/TimeLine';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import LineGraph from './LineGraph/LineGraph';
+import './NewsFeed.css';
+import TimeLine from './TimeLine/TimeLine';
 interface NewsFeed {}
 
 const NewsFeed: React.FC<NewsFeed> = ({}) => {
@@ -25,6 +24,10 @@ const NewsFeed: React.FC<NewsFeed> = ({}) => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log(timeLine);
+  }, [timeLine]);
+
   return (
     <div className="newsfeed">
       <div className="newsfeed__container">
@@ -37,7 +40,7 @@ const NewsFeed: React.FC<NewsFeed> = ({}) => {
           </div>
           <div className="newsfeed__chart">
             <LineGraph symbol={symbol!} timeLine={timeLine!} />
-            <TimeLine />
+            <TimeLine callback={setTimeLine} />
           </div>
         </div>
       </div>
