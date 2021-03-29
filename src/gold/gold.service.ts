@@ -1,32 +1,16 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 
+const ENDURL =
+  'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary';
+
 @Injectable()
 export class GoldService {
   constructor(private httpService: HttpService) {}
 
-  public async getGold(dateAgo: number) {
-    const now = new Date();
-
-    const nowYear = now.getFullYear();
-    const nowMonth = now.getMonth() + 1;
-    const nowDay = now.getDay();
-    if (nowDay == 0) dateAgo += 2;
-    if (nowDay == 1) dateAgo += 3;
-    if (nowDay == 6) dateAgo += 1;
-    const nowDate = now.getDate() - dateAgo;
-
-    const dateInfo =
-      nowYear.toString() +
-      (nowMonth < 10 ? '0' + nowMonth : nowMonth) +
-      (nowDate < 10 ? '0' + nowDate : nowDate);
-    console.log(dateInfo);
-
-    const ENDURL_GOLD = `https://www.goldapi.io/api/XAU/USD/` + dateInfo;
-    // const ENDURL_GOLD = `https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-chart`;
-
+  public async getGold() {
     const GOLD_INFO = this.httpService
-      .get(ENDURL_GOLD)
+      .get(ENDURL)
       .pipe(map((response) => response.data));
 
     return GOLD_INFO;

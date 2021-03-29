@@ -7,12 +7,12 @@ export class GoldController {
 
   @Get('/')
   public getAll() {
-    return this.goldService.getGold(0);
+    return this.goldService.getGold();
   }
 
   @Get('/:ago')
   public getGold(@Param('ago') ago: number) {
-    return this.goldService.getGold(ago);
+    return this.goldService.getGold();
   }
 
   @Get('/exchange')

@@ -7,58 +7,47 @@ import axios from 'axios';
 interface NewsFeed {}
 
 const NewsFeed: React.FC<NewsFeed> = ({}) => {
-  const [popularTopics, setTopics] = useState([
-    'Technology',
-    'Top Movies',
-    'Upcoming Earnings',
-    'Crypto',
-    'Cannabis',
-    'Healthcare Supplies',
-    'Index ETFs',
-    'Technology',
-    'China',
-    'Pharma',
-  ]);
-
-  const [seed, setSeed] = useState<number>(0);
-
-  useEffect(() => {
-    setSeed(Math.floor(Math.random() * 5000));
-  }, []);
-
+  const [symbol, setSymbol] = useState<string>();
+  const [price, setPrice] = useState<number>();
+  const [change, setChange] = useState<string>();
+  const [timeLine, setTimeLine] = useState<string>();
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/chart`, {
+      .get(`http://localhost:4000/gold`, {
         headers: {
           'Content-Type': 'application/json',
         },
       })
       .then((res) => {
-        console.log(res.data);
-        // setPriceNow(res.data);
+        setSymbol(res.data.symbol);
+        setPrice(res.data.price.regularMarketPrice.raw);
+        setChange(res.data.price.regularMarketChangePercent.fmt);
       });
-    axios
-      .get(`http://localhost:4000/gold/1`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        // setPriceDayAgo(res.data);
-      });
+
+    // axios
+    //   .get(`http://localhost:4000/gold/1`, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     // setPriceDayAgo(res.data);
+    //   });
   }, []);
 
   return (
     <div className="newsfeed">
       <div className="newsfeed__container">
         <div className="newsfeed__chart__section">
+          <h1>{symbol}</h1>
           <div className="newsfeed_price_asset">
-            <h1> $114,656,84</h1>
-            <p> $142.90 (-0,12) Today </p>
+            <p>
+              ${price} {change} Today
+            </p>
           </div>
           <div className="newsfeed__chart">
-            <LineGraph />
+            <LineGraph symbol={symbol!} timeLine={timeLine!} />
             <TimeLine />
           </div>
         </div>

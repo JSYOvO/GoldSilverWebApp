@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 
-interface LineGraph {}
+interface LineGraph {
+  symbol: string;
+  timeLine: string;
+}
 const options = {
   legend: {
     display: false,
@@ -49,7 +52,7 @@ const options = {
   },
 };
 
-const LineGraph: React.FC<LineGraph> = ({}) => {
+const LineGraph: React.FC<LineGraph> = (prop) => {
   const [data, setData] = useState<any>({});
 
   useEffect(() => {
