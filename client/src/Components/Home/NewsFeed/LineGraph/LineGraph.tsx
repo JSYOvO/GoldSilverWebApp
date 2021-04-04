@@ -57,16 +57,27 @@ interface IData {
   y: string;
 }
 
+const defaultTimeLine = '5D';
+
 const LineGraph: React.FC<LineGraph> = (prop) => {
   const [data, setData] = useState<IData[]>([]);
-  console.log(prop.symbol);
+  // const [timeLine, setTimeLine] = useState<string>(prop.timeLine);
+
+  // useEffect(() => {
+  //   setTimeLine(prop.timeLine);
+  //   console.log(prop.symbol, prop.timeLine);
+  // }, [prop]);
+
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/chart/5d/gold`, {
-        headers: {
-          'Content-Type': 'application/json',
+      .get(
+        `http://localhost:4000/chart/${prop.timeLine || defaultTimeLine}/gold`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
       .then((res) => {
         const timestamp: any = res.data.chart.result[0].timestamp;
         const openPrice: any =
@@ -81,7 +92,7 @@ const LineGraph: React.FC<LineGraph> = (prop) => {
         }
         setData(tmpData);
       });
-  }, []);
+  }, [prop]);
 
   return (
     <div>
