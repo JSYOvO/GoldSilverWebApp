@@ -1,17 +1,22 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { SilverService } from './silver.service';
+import { SilverService } from './Silver.service';
 
-@Controller('silver')
+@Controller('Silver')
 export class SilverController {
-  constructor(private readonly silverService: SilverService) {}
+  constructor(private readonly SilverService: SilverService) {}
 
   @Get('/')
   public getAll() {
-    return this.silverService.getPrice(0);
+    return this.SilverService.getSilver();
   }
 
   @Get('/:ago')
-  public getGold(@Param('ago') ago: number) {
-    return this.silverService.getPrice(ago);
+  public getSilver(@Param('ago') ago: number) {
+    return this.SilverService.getSilver();
+  }
+
+  @Get('/exchange')
+  public getExchangeRate() {
+    return this.SilverService.getExchangeRate();
   }
 }

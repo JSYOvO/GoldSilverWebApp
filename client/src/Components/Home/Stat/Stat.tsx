@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import './Stat.css';
 import StatRow from './StatRow';
-// import { db } from "./firebase";
-
-// const BASE_URL = "https://finnhub.io/api/v1/quote?symbol=";
-// const KEY_URL = `&token=${key}`;
 
 const testData = [];
 interface IDate {

@@ -15,7 +15,14 @@ const StatRow: React.FC<StatRow> = (props) => {
   const dispatch = useDispatch();
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    dispatch(setData(e.currentTarget.querySelector('h1')?.innerText));
+    console.log('chartSymbol', e.currentTarget.querySelector('h1')?.innerText);
+
+    dispatch(
+      setData({
+        chartSymbol: e.currentTarget.querySelector('h1')?.innerText,
+        chartTimeLine: null,
+      }),
+    );
   };
 
   return (

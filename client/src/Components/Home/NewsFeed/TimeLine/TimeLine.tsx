@@ -4,16 +4,18 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
+import { useDispatch } from 'react-redux';
+import { setData } from '../../../../features/data/dataSlice';
 import './TimeLine.css';
-interface TimeLine {
-  callback: React.Dispatch<React.SetStateAction<string | undefined>>;
-}
+interface TimeLine {}
 
-const TimeLine: React.FC<TimeLine> = (prop) => {
+const TimeLine: React.FC<TimeLine> = () => {
   const timeButton5D = useRef<HTMLDivElement>(null);
   const timeButton1M = useRef<HTMLDivElement>(null);
   const timeButton3M = useRef<HTMLDivElement>(null);
   const timeButton1Y = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
+
   const onClickButton = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     timeButton5D.current?.classList.remove('active');
     timeButton1M.current?.classList.remove('active');
@@ -21,12 +23,14 @@ const TimeLine: React.FC<TimeLine> = (prop) => {
     timeButton1Y.current?.classList.remove('active');
 
     e.currentTarget.classList.add('active');
-    prop.callback(e.currentTarget.innerText);
+    console.log('chartTimeLine', e.currentTarget.innerText);
+    dispatch(
+      setData({
+        chartSymbol: null,
+        chartTimeLine: e.currentTarget.innerText,
+      }),
+    );
   };
-
-  useEffect(() => {
-    prop.callback('5D');
-  }, []);
 
   return (
     <div className="timeline__container">

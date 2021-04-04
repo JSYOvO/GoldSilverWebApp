@@ -4,8 +4,7 @@ import { Line } from 'react-chartjs-2';
 import './LineGraph.css';
 
 interface LineGraph {
-  symbol: string;
-  timeLine: string;
+  data: IData[];
 }
 const options = {
   legend: {
@@ -59,60 +58,28 @@ interface IData {
 }
 
 const LineGraph: React.FC<LineGraph> = (prop) => {
-  const [data, setData] = useState<IData[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`http://localhost:4000/chart/${prop.timeLine}/${prop.symbol}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res) => {
-        const timestamp: any = res.data.chart.result[0].timestamp;
-        const openPrice: any =
-          res.data.chart.result[0].indicators.quote[0].open;
-
-        let tmpData = [];
-        for (let i = 0; i < timestamp.length; i++) {
-          tmpData.push({
-            x: new Date(timestamp[i] * 1000),
-            y: openPrice[i],
-          });
-        }
-        setData(tmpData);
-        setIsLoading(false);
-      });
-  }, [prop]);
-
   return (
     <div className="linegraph">
-      {isLoading ? (
-        <div>Is Loading...</div>
-      ) : (
-        <Line
-          data={{
-            datasets: [
-              {
-                type: 'line',
-                backgroundColor: 'black',
-                borderColor: '#5AC53B',
-                borderWidth: 2,
-                pointBorderColor: 'rgba(0, 0, 0, 0)',
-                pointBackgroundColor: 'rgba(0, 0, 0, 0)',
-                pointHoverBackgroundColor: '#5AC53B',
-                pointHoverBorderColor: '#000000',
-                pointHoverBorderWidth: 4,
-                pointHoverRadius: 6,
-                data: data,
-              },
-            ],
-          }}
-          options={options}
-        />
-      )}
+      <Line
+        data={{
+          datasets: [
+            {
+              type: 'line',
+              backgroundColor: 'black',
+              borderColor: '#5AC53B',
+              borderWidth: 2,
+              pointBorderColor: 'rgba(0, 0, 0, 0)',
+              pointBackgroundColor: 'rgba(0, 0, 0, 0)',
+              pointHoverBackgroundColor: '#5AC53B',
+              pointHoverBorderColor: '#000000',
+              pointHoverBorderWidth: 4,
+              pointHoverRadius: 6,
+              data: prop.data,
+            },
+          ],
+        }}
+        options={options}
+      />
     </div>
   );
 };

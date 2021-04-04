@@ -7,7 +7,7 @@ import { GoldService } from './gold.service';
     HttpModule.register({
       params: { symbol: 'GC=F', region: 'US' },
       headers: {
-        'x-rapidapi-key': 'f86b58d97dmsh9af5f5eb2318f1ap1a6aafjsnbbcb7769bd85',
+        'x-rapidapi-key': '9a6b5934d9mshc9cf480c9838d45p1d8635jsn4c648a49c63e',
         'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
       },
     }),
