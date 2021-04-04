@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import './LineGraph.css';
 
 interface LineGraph {
   symbol: string;
@@ -57,27 +58,18 @@ interface IData {
   y: string;
 }
 
-const defaultTimeLine = '5D';
-
 const LineGraph: React.FC<LineGraph> = (prop) => {
   const [data, setData] = useState<IData[]>([]);
-  // const [timeLine, setTimeLine] = useState<string>(prop.timeLine);
-
-  // useEffect(() => {
-  //   setTimeLine(prop.timeLine);
-  //   console.log(prop.symbol, prop.timeLine);
-  // }, [prop]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsLoading(true);
     axios
-      .get(
-        `http://localhost:4000/chart/${prop.timeLine || defaultTimeLine}/gold`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      .get(`http://localhost:4000/chart/${prop.timeLine}/${prop.symbol}`, {
+        headers: {
+          'Content-Type': 'application/json',
         },
-      )
+      })
       .then((res) => {
         const timestamp: any = res.data.chart.result[0].timestamp;
         const openPrice: any =
@@ -91,12 +83,15 @@ const LineGraph: React.FC<LineGraph> = (prop) => {
           });
         }
         setData(tmpData);
+        setIsLoading(false);
       });
   }, [prop]);
 
   return (
-    <div>
-      {data?.length > 0 && (
+    <div className="linegraph">
+      {isLoading ? (
+        <div>Is Loading...</div>
+      ) : (
         <Line
           data={{
             datasets: [

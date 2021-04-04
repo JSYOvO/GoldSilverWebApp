@@ -1,4 +1,9 @@
-import React, { DetailedHTMLProps, HTMLAttributes, useRef } from 'react';
+import React, {
+  DetailedHTMLProps,
+  HTMLAttributes,
+  useEffect,
+  useRef,
+} from 'react';
 import './TimeLine.css';
 interface TimeLine {
   callback: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -18,6 +23,10 @@ const TimeLine: React.FC<TimeLine> = (prop) => {
     e.currentTarget.classList.add('active');
     prop.callback(e.currentTarget.innerText);
   };
+
+  useEffect(() => {
+    prop.callback('5D');
+  }, []);
 
   return (
     <div className="timeline__container">

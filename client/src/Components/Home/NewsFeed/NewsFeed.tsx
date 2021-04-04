@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { RootStateOrAny, useSelector } from 'react-redux';
 import LineGraph from './LineGraph/LineGraph';
 import './NewsFeed.css';
 import TimeLine from './TimeLine/TimeLine';
@@ -10,36 +11,38 @@ const NewsFeed: React.FC<NewsFeed> = ({}) => {
   const [price, setPrice] = useState<number>();
   const [change, setChange] = useState<string>();
   const [timeLine, setTimeLine] = useState<string>();
-  useEffect(() => {
-    axios
-      .get(`http://localhost:4000/gold`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res) => {
-        setSymbol(res.data.symbol);
-        setPrice(res.data.price.regularMarketPrice.raw);
-        setChange(res.data.price.regularMarketChangePercent.fmt);
-      });
-  }, []);
+  const chartSymbol = useSelector(
+    (state: RootStateOrAny) => state.data.chartSymbol,
+  );
 
-  useEffect(() => {
-    console.log(timeLine);
-  }, [timeLine]);
+  // useEffect(() => {
+  //   console.log(chartData);
+  //   const defaultChart = `gold`;
+  //   axios
+  //     .get(`http://localhost:4000/${chartData || defaultChart}`, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     })
+  //     .then((res) => {
+  //       setSymbol(res.data.symbol);
+  //       setPrice(res.data.price.regularMarketPrice.raw);
+  //       setChange(res.data.price.regularMarketChangePercent.fmt);
+  //     });
+  // }, [chartData]);
 
   return (
     <div className="newsfeed">
       <div className="newsfeed__container">
         <div className="newsfeed__chart__section">
-          <h1>{symbol}</h1>
+          <h1>{chartSymbol}</h1>
           <div className="newsfeed_price_asset">
             <p>
               ${price} {change} Today
             </p>
           </div>
           <div className="newsfeed__chart">
-            <LineGraph symbol={symbol!} timeLine={timeLine!} />
+            <LineGraph symbol={chartSymbol!} timeLine={timeLine!} />
             <TimeLine callback={setTimeLine} />
           </div>
         </div>

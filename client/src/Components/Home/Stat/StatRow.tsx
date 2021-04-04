@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { setData } from '../../../features/data/dataSlice';
 import StockChart from './stock.svg';
 
 interface StatRow {
@@ -10,10 +12,14 @@ interface StatRow {
 
 const StatRow: React.FC<StatRow> = (props) => {
   const percentage = ((props.price - props.openPrice) / props.openPrice) * 100;
+  const dispatch = useDispatch();
 
-  const getModal = () => {};
+  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    dispatch(setData(e.currentTarget.querySelector('h1')?.innerText));
+  };
+
   return (
-    <div className="row" onClick={getModal}>
+    <div className="row" onClick={(e) => handleClick(e)}>
       <div className="row__intro">
         <h1>{props?.name}</h1>
         <p>{props.volume && props.volume + ' shares'}</p>

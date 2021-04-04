@@ -1,57 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Stat.css';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import StatRow from './StatRow';
-// import { key } from "./api";
-import axios from 'axios';
 // import { db } from "./firebase";
 
 // const BASE_URL = "https://finnhub.io/api/v1/quote?symbol=";
 // const KEY_URL = `&token=${key}`;
 
 const testData = [];
-
+interface IDate {
+  ticker: string;
+  shares: number;
+}
+interface IInfo {
+  o: number;
+  c: number;
+}
+interface IStock {
+  data: IDate;
+  info: IInfo;
+}
 function Stat() {
-  const [stocksData, setStocksData] = useState<any[]>([]);
-  const [myStocks, setMyStocks] = useState<any[]>([]);
-
-  const getMyStocks = () => {
-    // db
-    // .collection('myStocks')
-    // .onSnapshot(snapshot => {
-    //     let promises = [];
-    //     let tempData = []
-    //     snapshot.docs.map((doc) => {
-    //       promises.push(getStocksData(doc.data().ticker)
-    //       .then(res => {
-    //         tempData.push({
-    //           id: doc.id,
-    //           data: doc.data(),
-    //           info: res.data
-    //         })
-    //       })
-    //     )})
-    //     Promise.all(promises).then(()=>{
-    //       setMyStocks(tempData);
-    //     })
-    // })
-  };
-
-  const getStocksData = (stock: any) => {
-    // return axios
-    //   .get(`${BASE_URL}${stock}${KEY_URL}`)
-    //   .catch((error) => {
-    //     console.error("Error", error.message);
-    //   });
-  };
+  const [stocksData, setStocksData] = useState<any[]>([
+    'Gold (GC=F)',
+    'Silver',
+  ]);
+  const [myStocks, setMyStocks] = useState<IStock[]>([
+    {
+      data: {
+        ticker: 'GOLD',
+        shares: 232,
+      },
+      info: { o: 1232, c: 2312 },
+    },
+    {
+      data: {
+        ticker: 'SILVER',
+        shares: 3423,
+      },
+      info: { o: 56, c: 352 },
+    },
+  ]);
 
   return (
     <div className="stats">
       <div className="stats__container">
-        <div className="stats__header">
-          <p> Stocks</p>
-          <MoreHorizIcon />
-        </div>
         <div className="stats__content">
           <div className="stats__rows">
             {myStocks.map((stock) => (
@@ -76,7 +68,7 @@ function Stat() {
                 name={stock.name}
                 openPrice={stock.o}
                 price={stock.c}
-                volume={1}
+                volume={2}
               />
             ))}
           </div>
