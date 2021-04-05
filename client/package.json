@@ -42,6 +42,7 @@
     "rechart": "^0.0.1",
     "recharts": "^2.0.9",
     "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.3",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
@@ -69,5 +70,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/redux-logger": "^3.0.8"
   }
 }

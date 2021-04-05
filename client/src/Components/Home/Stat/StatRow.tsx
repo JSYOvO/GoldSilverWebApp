@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setData } from '../../../features/data/dataSlice';
+import { fetchData } from '../../../features/data/dataSlice';
+
 import StockChart from './stock.svg';
 
 interface StatRow {
@@ -15,12 +16,10 @@ const StatRow: React.FC<StatRow> = (props) => {
   const dispatch = useDispatch();
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    console.log('chartSymbol', e.currentTarget.querySelector('h1')?.innerText);
-
     dispatch(
-      setData({
-        chartSymbol: e.currentTarget.querySelector('h1')?.innerText,
+      fetchData({
         chartTimeLine: null,
+        chartSymbol: e.currentTarget.querySelector('h1')?.innerText!,
       }),
     );
   };

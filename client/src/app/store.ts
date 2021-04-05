@@ -1,5 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import dataReducer from '../features/data/dataSlice';
+import logger from 'redux-logger';
 
 // configureStore()
 // wraps createStore to provide simplified
@@ -13,4 +14,6 @@ export default configureStore({
   reducer: {
     data: dataReducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  devTools: process.env.NODE_ENF !== 'production',
 });

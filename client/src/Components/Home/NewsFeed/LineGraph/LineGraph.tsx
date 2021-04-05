@@ -1,11 +1,9 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Line } from 'react-chartjs-2';
+import { RootStateOrAny, useSelector } from 'react-redux';
 import './LineGraph.css';
 
-interface LineGraph {
-  data: IData[];
-}
+interface LineGraph {}
 const options = {
   legend: {
     display: false,
@@ -52,12 +50,13 @@ const options = {
     ],
   },
 };
-interface IData {
-  x: Date;
-  y: string;
-}
 
-const LineGraph: React.FC<LineGraph> = (prop) => {
+const LineGraph: React.FC<LineGraph> = () => {
+  const chartData = useSelector(
+    (state: RootStateOrAny) => state.data.chartData,
+  );
+  console.log(chartData);
+
   return (
     <div className="linegraph">
       <Line
@@ -74,7 +73,7 @@ const LineGraph: React.FC<LineGraph> = (prop) => {
               pointHoverBorderColor: '#000000',
               pointHoverBorderWidth: 4,
               pointHoverRadius: 6,
-              data: prop.data,
+              data: chartData,
             },
           ],
         }}
