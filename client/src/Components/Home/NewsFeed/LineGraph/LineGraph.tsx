@@ -4,6 +4,10 @@ import { RootStateOrAny, useSelector } from 'react-redux';
 import './LineGraph.css';
 
 interface LineGraph {}
+interface IData {
+  x: Date;
+  y: string;
+}
 const options = {
   legend: {
     display: false,
@@ -52,10 +56,9 @@ const options = {
 };
 
 const LineGraph: React.FC<LineGraph> = () => {
-  const chartData = useSelector(
+  const chartData: IData[] = useSelector(
     (state: RootStateOrAny) => state.data.chartData,
   );
-  console.log(chartData);
 
   return (
     <div className="linegraph">
@@ -73,7 +76,7 @@ const LineGraph: React.FC<LineGraph> = () => {
               pointHoverBorderColor: '#000000',
               pointHoverBorderWidth: 4,
               pointHoverRadius: 6,
-              data: chartData,
+              data: chartData.length > 0 ? chartData : [],
             },
           ],
         }}

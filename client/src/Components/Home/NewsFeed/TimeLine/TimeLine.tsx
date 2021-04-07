@@ -5,7 +5,7 @@ import React, {
   useRef,
 } from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { fetchData } from '../../../../features/data/dataSlice';
+import { fetchChartData, fetchData } from '../../../../features/data/dataSlice';
 import './TimeLine.css';
 interface TimeLine {}
 
@@ -19,6 +19,15 @@ const TimeLine: React.FC<TimeLine> = () => {
     (state: RootStateOrAny) => state.data.chartSymbol,
   );
 
+  useEffect(() => {
+    dispatch(
+      fetchChartData({
+        chartTimeLine: '5D',
+        chartSymbol: 'GOLD',
+      }),
+    );
+  }, []);
+
   const onClickButton = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     timeButton5D.current?.classList.remove('active');
     timeButton1M.current?.classList.remove('active');
@@ -28,7 +37,7 @@ const TimeLine: React.FC<TimeLine> = () => {
     e.currentTarget.classList.add('active');
 
     dispatch(
-      fetchData({
+      fetchChartData({
         chartTimeLine: e.currentTarget.innerText,
         chartSymbol: chartSymbol,
       }),

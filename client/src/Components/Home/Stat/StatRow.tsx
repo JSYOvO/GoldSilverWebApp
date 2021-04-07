@@ -1,6 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchData } from '../../../features/data/dataSlice';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { fetchChartData, fetchData } from '../../../features/data/dataSlice';
 
 import StockChart from './stock.svg';
 
@@ -14,11 +14,21 @@ interface StatRow {
 const StatRow: React.FC<StatRow> = (props) => {
   const percentage = ((props.price - props.openPrice) / props.openPrice) * 100;
   const dispatch = useDispatch();
+  const chartTimeLine = useSelector(
+    (state: RootStateOrAny) => state.data.chartTimeLine,
+  );
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     dispatch(
       fetchData({
         chartTimeLine: null,
+        chartSymbol: e.currentTarget.querySelector('h1')?.innerText!,
+      }),
+    );
+
+    dispatch(
+      fetchChartData({
+        chartTimeLine: chartTimeLine,
         chartSymbol: e.currentTarget.querySelector('h1')?.innerText!,
       }),
     );
