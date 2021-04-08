@@ -1,4 +1,3 @@
-import { SearchOutlined } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
@@ -20,7 +19,7 @@ const NavBar: React.FC<NavBar> = () => {
         <Link to="/free">
           <h1>Free Stocks</h1>
         </Link>
-        <Link to="/porifolio">
+        <Link to="/portfolio">
           <h1>PortFolio</h1>
         </Link>
         <Link to="/Cash">

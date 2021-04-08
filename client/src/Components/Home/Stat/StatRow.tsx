@@ -6,13 +6,12 @@ import StockChart from './stock.svg';
 
 interface StatRow {
   price: number;
-  openPrice: number;
+  change: number;
   name: string;
   volume: number;
 }
 
 const StatRow: React.FC<StatRow> = (props) => {
-  const percentage = ((props.price - props.openPrice) / props.openPrice) * 100;
   const dispatch = useDispatch();
   const chartTimeLine = useSelector(
     (state: RootStateOrAny) => state.data.chartTimeLine,
@@ -38,14 +37,11 @@ const StatRow: React.FC<StatRow> = (props) => {
     <div className="row" onClick={(e) => handleClick(e)}>
       <div className="row__intro">
         <h1>{props?.name}</h1>
-        <p>{props.volume && props.volume + ' shares'}</p>
-      </div>
-      <div className="row__chart">
-        <img src={StockChart} height={16} />
+        <p>{props.volume && props.volume + ' oz'}</p>
       </div>
       <div className="row__numbers">
         <p className="row__price">{props.price}</p>
-        <p className="row__percentage"> +{Number(percentage).toFixed(2)}%</p>
+        <p className="row__percentage"> +{Number(props.change).toFixed(2)}%</p>
       </div>
     </div>
   );

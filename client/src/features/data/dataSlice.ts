@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { RootStateOrAny, useSelector } from 'react-redux';
 
 // createSlice()
 // accepts an object of reducer functions, a slice name,

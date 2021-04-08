@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { RootStateOrAny, useSelector } from 'react-redux';
 import './Stat.css';
 import StatRow from './StatRow';
 
@@ -16,57 +17,32 @@ interface IStock {
   info: IInfo;
 }
 function Stat() {
-  const [stocksData, setStocksData] = useState<any[]>([
-    'Gold (GC=F)',
-    'Silver',
-  ]);
-  const [myStocks, setMyStocks] = useState<IStock[]>([
-    {
-      data: {
-        ticker: 'GOLD',
-        shares: 232,
-      },
-      info: { o: 1232, c: 2312 },
-    },
-    {
-      data: {
-        ticker: 'SILVER',
-        shares: 3423,
-      },
-      info: { o: 56, c: 352 },
-    },
-  ]);
+  const userGoldInfo = useSelector(
+    (state: RootStateOrAny) => state.user.goldInfo,
+  );
+  const userSilverInfo = useSelector(
+    (state: RootStateOrAny) => state.user.silverInfo,
+  );
 
   return (
     <div className="stats">
       <div className="stats__container">
         <div className="stats__content">
           <div className="stats__rows">
-            {myStocks.map((stock) => (
-              <StatRow
-                key={stock.data.ticker}
-                name={stock.data.ticker}
-                openPrice={stock.info.o}
-                volume={stock.data.shares}
-                price={stock.info.c}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="stats__header stats-lists">
-          <p>Lists</p>
-        </div>
-        <div className="stats__content">
-          <div className="stats__rows">
-            {stocksData.map((stock) => (
-              <StatRow
-                key={stock.name}
-                name={stock.name}
-                openPrice={stock.o}
-                price={stock.c}
-                volume={2}
-              />
-            ))}
+            <StatRow
+              key={userGoldInfo.ticker}
+              name={userGoldInfo.ticker}
+              price={userGoldInfo.price}
+              volume={userGoldInfo.volumn}
+              change={userGoldInfo.change}
+            />
+            <StatRow
+              key={userSilverInfo.ticker}
+              name={userSilverInfo.ticker}
+              price={userSilverInfo.price}
+              volume={userSilverInfo.volumn}
+              change={userSilverInfo.change}
+            />
           </div>
         </div>
       </div>
