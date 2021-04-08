@@ -7,7 +7,7 @@ import { Chart5DSilverController } from './chart5DSilver.controller';
     HttpModule.register({
       params: { interval: '1d', symbol: 'SI=F', range: '5d', region: 'US' },
       headers: {
-        'x-rapidapi-key': '9a6b5934d9mshc9cf480c9838d45p1d8635jsn4c648a49c63e',
+        'x-rapidapi-key': '4688bc0cbcmsh0dae82a4c1f4f8bp1cd9cejsn93cf24c70534',
         'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
       },
     }),
